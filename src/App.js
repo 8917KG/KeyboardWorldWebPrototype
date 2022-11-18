@@ -74,12 +74,12 @@ function App() {
 
 onAuthStateChanged( FBauth, (user) => {
   if (user){
-    console.log(user)
+    // console.log(user)
     setAuth(user)
     setNav(NavDataAuth)
   }
   else{
-    console.log("not signed in.")
+    // console.log("not signed in.")
     setAuth(null)
     setNav(NavData)
   }
