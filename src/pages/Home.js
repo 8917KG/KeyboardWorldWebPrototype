@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react"
+import { Link } from "react-router-dom"
 export function Home(props) {
     const [pageData, setPageData] = useState([])
     useEffect(() => {
@@ -10,9 +11,10 @@ export function Home(props) {
             return (
                 <div className="col-md-4" key={key}>
                     <div className="card">
-                        <Image urlgetter={props.imageGetter} imgPath={"keyboard_photos/" + item.KeebPhoto} />
+                        <Image urlgetter={props.imageGetter} imgPath={"keyboard_images/" + item.KeebPhoto} />
                         <div className="card-body">
                             <h5 className="card-title">{item.KeebName}</h5>
+                            <Link to={"/keyboards/" + item.id}>Detail</Link>
                         </div>
                     </div>
                 </div>
@@ -35,6 +37,7 @@ export function Home(props) {
 
 function Image(props) {
     const [imageURL, setImageURL] = useState()
+
     useEffect(() => {
         if (!imageURL) {
             props.urlgetter(props.imgPath)

@@ -3,3 +3,7 @@
   grid-template-rows: auto 1fr auto;
   min-height: 100vh;
 }
+
+.Home {
+  background-color: #212b31;
+}

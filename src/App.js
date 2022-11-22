@@ -9,11 +9,12 @@ import { About } from './pages/About'
 import { Signup } from './pages/Signup'
 import { Signout } from './pages/Signout'
 import { Signin } from './pages/Signin'
+import { Detail } from './pages/Detail'
 
 // import firebase 
 import { initializeApp } from "firebase/app";
 import { FirebaseConfig } from './config/FirebaseConfig';
-import { getFirestore, getDocs, collection } from "firebase/firestore";
+import { getFirestore, getDocs, collection,doc,getDoc } from "firebase/firestore";
 
 //import firebase auth
 import {
@@ -22,7 +23,7 @@ import {
   onAuthStateChanged,
   signOut,
   signInWithEmailAndPassword
-}from "firebase/auth"
+} from "firebase/auth"
 
 import { getStorage, ref, getDownloadURL } from "firebase/storage"
 
@@ -89,7 +90,7 @@ function App() {
     if (data.length === 0) {
       setData(getDataCollection('keyboards'))
     }
-  }, [data])
+  })
 
   onAuthStateChanged(FBauth, (user) => {
     if (user) {
@@ -108,7 +109,7 @@ function App() {
     const collectionData = await getDocs(collection(FBdb, path))
     let dbItems = []
     collectionData.forEach((doc) => {
-      let item = doc.data
+      let item = doc.data()
       item.id = doc.id
       dbItems.push(item)
     })
@@ -125,6 +126,17 @@ function App() {
     })
   }
   
+  const getDocument = async (col, id) => {
+    const docRef = doc (FBdb, col, id)
+    const docData = await getDoc (docRef)
+    if (docData.exists()){
+      return docData.data()
+    }
+    else {
+      return null
+    }
+  }
+
   return (
     <div className="App">
       <Header title="Keyboard World" headernav={nav} />
@@ -135,6 +147,7 @@ function App() {
         <Route path='/signup' element={<Signup handler={signup} />} />
         <Route path='/signout' element={<Signout handler={signOutUser} auth={auth} />} />
         <Route path='/signin' element={<Signin handler={signin} />} />
+        <Route path='/keyboards/:keyboardId' element = {<Detail getter = {getDocument}/>}/>
       </Routes>
       <Footer year="2022" />
     </div>
