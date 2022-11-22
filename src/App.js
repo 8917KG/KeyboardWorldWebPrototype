@@ -11,8 +11,9 @@ import { Signout } from './pages/Signout'
 import { Signin } from './pages/Signin'
 
 // import firebase 
-import { initializeApp } from "firebase/app";
+import { initializeApp } from  "firebase/app";
 import { FirebaseConfig } from './config/FirebaseConfig';
+import { getFirestore, getDocs, collection } from "firebase/firestore";   
 
 //import firebase auth
 import {getAuth, 
@@ -22,10 +23,20 @@ import {getAuth,
   signInWithEmailAndPassword } 
   from "firebase/auth"
 
+import {getStorage, ref, getDownloadURL} from "firebase/storage"
+
 //initialise Firebase 
 const FBapp = initializeApp(FirebaseConfig);
-//initialise Firebase auth
+//initialise Firebase auth 
 const FBauth = getAuth(FBapp) 
+
+//initialise Firestore Database
+const FBdb = getFirestore(FBapp)
+
+//initialise Firebase Storage
+const FBstorage = getStorage() 
+
+
 
 //function to create user account
 const signup = (email, password) => {
@@ -70,7 +81,14 @@ const NavDataAuth = [
 function App() {
 
   const [auth , setAuth] = useState()
-  const [nav, setNav] = useState(NavData)
+  const [nav, setNav] = useState(NavData) 
+  const [data, setData] = useState([])
+
+  useEffect(()=>{
+    if(data.length === 0){
+      setData(getDataCollection('keyboards'))
+    }
+  },[data])
 
 onAuthStateChanged( FBauth, (user) => {
   if (user){
@@ -85,11 +103,35 @@ onAuthStateChanged( FBauth, (user) => {
   }
 })
 
+  const getDataCollection = async (path) => {
+    const collectionData = await getDocs( collection (FBdb, path))
+    let dbItems = []
+    collectionData.forEach((doc)=>{
+      let item = doc.data
+      item.id = doc.id
+      dbItems.push(item)
+    }) 
+    setData(dbItems)
+    //return dbItems
+  } 
+
+  const getImageURL = (path) => {
+    const ImageRef = ref(FBstorage, path)
+    return new Promise ((resolve, reject) => {
+      getDownloadURL (ImageRef)
+      .then((url) => resolve(url))
+      .catch((error) => reject(error))
+      })
+  }
+  
+
+
+
   return (
     <div className="App">
-      <Header title = "Keyboard World" headernav = {nav}/>
+      <Header title = "Keyboard World"  headernav = {nav}/>
       <Routes>
-        <Route path ="/" element = {<Home/>} />
+        <Route path ="/" element = {<Home listData = {data} imageGetter = {getImageURL}/>} />
         <Route path ="/about" element = {<About/>} />
         <Route path ="/contact" element = {<Contact/>} />
         <Route path='/signup' element = {<Signup handler = {signup}/>}/>

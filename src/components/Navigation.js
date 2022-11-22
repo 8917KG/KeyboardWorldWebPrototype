@@ -20,7 +20,7 @@ export function Navigation (props) {
             )
         })
         return (
-            <nav className="navbar-nav me-auto mb-2 mb-lg-0">
+            <nav className="navbar-nav me-auto mb-4 mb-lg-0">
                 {NavigationLinks}
             </nav>
         )
