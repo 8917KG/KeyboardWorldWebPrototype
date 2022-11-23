@@ -1,10 +1,10 @@
 import { Link } from "react-router-dom"
-import "/Users/kuldipgurung/Downloads/Advanced Web/8917_Keyboard World/keyboard-world/src/css/Footercss.css";
+//import "/Users/kuldipgurung/Downloads/Advanced Web/8917_Keyboard World/keyboard-world/src/css/Footercss.css";
 
 export function Footer(props){
     return(
         <footer className="footer-container-fluid">
-            <div className='text-white'>
+            <div className='text-black'>
                     <div className='col'>
                         <form className="col-md-4 offset-md-4">
                             <p className="new">Subscribe our newsletter to get the latest updates.</p>

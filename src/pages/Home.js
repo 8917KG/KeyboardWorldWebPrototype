@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react"
 import { Link } from "react-router-dom"
-import "/Users/kuldipgurung/Downloads/Advanced Web/8917_Keyboard World/keyboard-world/src/css/Homecss.css"
+//import "/Users/kuldipgurung/Downloads/Advanced Web/8917_Keyboard World/keyboard-world/src/css/Homecss.css"
 export function Home(props) {
     const [pageData, setPageData] = useState([])
     useEffect(() => {
