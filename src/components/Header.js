@@ -19,7 +19,7 @@ export function Header(props) {
                     </div>
                 </div>
             </nav >
-            <header className='navbar p-3 navbar-expand-lg' >
+            <header className='navbar navbar-expand-lg' >
                 <div className='container-fluid' >
                     <Link className='navbar-brand' to='/'>{props.title}</Link>
                     <div className="row align-item-end ">
