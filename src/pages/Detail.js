@@ -1,6 +1,7 @@
 import { useParams } from "react-router-dom"
 import { useState, useEffect } from 'react'
 
+
 export function Detail ( props ) {
     const[ keyboardData, setKeyboardData ] = useState()
 
@@ -26,13 +27,13 @@ export function Detail ( props ) {
             <div className="row">
                 <div className="col">
                     <h2>{keyboardId}</h2>
-                    <h3>Keybaord Picture</h3>
+                    <h3>{keyboardData.KeebPhoto}</h3>
                 </div>
-                <div className="col">
+                <div className="col-md-2 offset-md-2 vstack gap-1">
                     <h3>Manufacture</h3>
                     <h3>Summary</h3>
-                    <button className="btn btn-info">Add to Favouries</button>
-                    <button className="btn btn-info">Review this keyboard</button>
+                    <button type = "button" className="btn btn-info">Add to Favouries</button>
+                    <button type = "button" className="btn btn-info">Review this keyboard</button>
                     <a className="btn btn-outline-primary" href = "https://dailyclack.com/products/matrix-corsa-keyboard-kit">Learn more.</a>
                 </div>
             </div>

@@ -34,10 +34,10 @@ export function Signup(props) {
     }, [password])
 
     useEffect(() => {
-        if (success === true){
-            navigate('/') 
+        if (success === true) {
+            navigate('/')
         }
-    },[success])
+    }, [success])
 
     const submitHandler = (event) => {
         //stop the form from refreshing the page

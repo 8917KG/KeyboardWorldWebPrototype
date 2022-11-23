@@ -11,6 +11,10 @@ import { Signout } from './pages/Signout'
 import { Signin } from './pages/Signin'
 import { Detail } from './pages/Detail'
 
+
+
+
+
 // import firebase 
 import { initializeApp } from "firebase/app";
 import { FirebaseConfig } from './config/FirebaseConfig';
