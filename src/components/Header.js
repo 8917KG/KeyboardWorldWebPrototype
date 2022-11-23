@@ -3,14 +3,22 @@ import { Link } from "react-router-dom"
 export function Header(props) {
     return (
 
-        <header>
-            <div className="navbar navbar-expand-lg  bg-dark">
-                <div className="container-fluid align-item-end">
-                    <div className="">
-                        <Link className='navbar-brand text-white' to='/signin'>Sign in</Link>
+
+        <>
+            <nav class="navbar navbar-expand-lg bg-dark ">
+                <div class="container-fluid ">
+                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarTogglerDemo01" aria-controls="navbarTogglerDemo01" aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                    <div class="collapse navbar-collapse" id="navbarTogglerDemo01">
+
+                        <div class="nav navbar-nav ms-auto">
+                            <Link className='nav-item text-white text-decoration-none' to='/signin'>Sign in</Link>
+                        </div>
+
                     </div>
                 </div>
-            </div>
+            </nav >
             <header className='navbar p-3 navbar-expand-lg' >
                 <div className='container-fluid' >
                     <Link className='navbar-brand' to='/'>{props.title}</Link>
@@ -21,9 +29,9 @@ export function Header(props) {
                     </div>
                 </div>
             </header>
-        </header>
 
+        </>
 
 
     )
-}  
+} 
