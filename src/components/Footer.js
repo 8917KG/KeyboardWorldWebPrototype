@@ -15,7 +15,7 @@ export function Footer(props) {
                             <h5 class="h4 text-white"><strong>Reach us</strong></h5>
                             <form action="!#">
                                 <div class="input-group mb-3">
-                                    <input class="form-control" type="text" placeholder="abe@email.com" />
+                                    <input class="form-control" type="text" placeholder="your@domain.com" />
 
                                 </div>
                                 <p class="small text-muted mb-0"><a class="text-primary" href="!#"><button type="button" class="btn btn-light">SUBSCRIBE NOW</button></a></p>

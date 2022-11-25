@@ -77,7 +77,7 @@ const NavData = [
   { name: "Product", path: "/product", public: true },
   { name: "About", path: "/about", public: true },
   { name: "Contact", path: "/contact", public: true },
-  // { name: "Sign Up", path: "/signup", public: true },
+  { name: "Sign Up", path: "/signup", public: true },
   // { name: "Sign In", path: "/signin", public: true },
 ]
 
