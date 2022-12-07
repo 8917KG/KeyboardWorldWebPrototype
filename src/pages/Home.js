@@ -15,7 +15,12 @@ export function Home(props) {
                         <Image urlgetter={props.imageGetter} imgPath={"keyboard_images/" + item.KeebPhoto} />
                         <div className="card-body">
                             <h5 className="card-title">{item.KeebName}</h5>
-                            <Link to={"/keyboards/" + item.id}><button type="button" className="btn btn-info btn-sm">Learn More Here</button></Link>
+                            <Link
+                                to={"/keyboards/" + item.id}>
+                                <button type="button" className="btn btn-info btn-sm">
+                                    Learn More Here
+                                </button>
+                            </Link>
                         </div>
                     </div>
                 </div>

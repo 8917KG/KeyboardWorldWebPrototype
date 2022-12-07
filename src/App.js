@@ -17,10 +17,21 @@ import { Product } from './pages/Product'
 
 
 
-// import firebase 
+// import firebase and firestore
 import { initializeApp } from "firebase/app";
 import { FirebaseConfig } from './config/FirebaseConfig';
-import { getFirestore, getDocs, collection,doc,getDoc } from "firebase/firestore";
+import {
+  getFirestore,
+  getDocs,
+  collection,
+  doc,
+  getDoc,
+  setDoc,
+  addDoc,
+  query,
+  onSnapshot,
+  where
+} from "firebase/firestore";
 
 //import firebase auth
 import {
@@ -44,33 +55,6 @@ const FBdb = getFirestore(FBapp)
 //initialise Firebase Storage
 const FBstorage = getStorage()
 
-
-
-//function to create user account
-const signup = (email, password) => {
-  return new Promise((resolve, reject) => {
-    createUserWithEmailAndPassword(FBauth, email, password)
-      .then((userCredential) => resolve(userCredential.user))
-      .catch((error) => reject(error))
-  })
-}
-
-const signin = (email, password) => {
-  return new Promise((resolve, reject) => {
-    signInWithEmailAndPassword(FBauth, email, password)
-      .then((userCredential) => resolve(userCredential.user))
-  })
-}
-
-const signOutUser = () => {
-  return new Promise((resolve, reject) => {
-    signOut(FBauth)
-      .then(() => resolve(true))
-      .catch((error) => reject(error))
-  })
-
-}
-
 const NavData = [
   { name: "Home", path: "/", public: true },
   { name: "Shop", path: "/shop", public: true },
@@ -93,10 +77,13 @@ function App() {
   const [auth, setAuth] = useState()
   const [nav, setNav] = useState(NavData)
   const [data, setData] = useState([])
+  const [userData, setUserData] = useState()
+  // keybaord reviews
+  const [keyboardReviews, setKeyboardReviews] = useState([])
 
   useEffect(() => {
     if (data.length === 0) {
-      setData(getDataCollection('keyboards'))
+      getDataCollection('keyboards')
     }
   })
 
@@ -105,13 +92,58 @@ function App() {
       // console.log(user)
       setAuth(user)
       setNav(NavDataAuth)
+      getUserData(user.uid)
     }
     else {
       // console.log("not signed in.")
       setAuth(null)
       setNav(NavData)
+      setUserData(null)
     }
   })
+
+  //function to create user account
+  const signup = (username, email, password) => {
+    return new Promise((resolve, reject) => {
+      createUserWithEmailAndPassword(FBauth, email, password)
+        .then(async (userCredential) => {
+          const uid = userCredential.user.uid
+          const userObj = {
+            name: username,
+          }
+          await setDoc(doc(FBdb, "users", uid), userObj)
+          setUserData(userObj)
+          resolve(userCredential.user)
+        })
+        .catch((error) => reject(error))
+    })
+  }
+
+  const signin = (username, email, password) => {
+    return new Promise((resolve, reject) => {
+      signInWithEmailAndPassword(FBauth, email, password)
+        .then(async(userCredential) => {
+          const uid = userCredential.user.uid
+          getUserData(uid)
+          resolve(userCredential.user)
+        })
+        .catch((error) => reject(error))
+    })
+  }
+
+  const signOutUser = () => {
+    return new Promise((resolve, reject) => {
+      signOut(FBauth)
+        .then(() => resolve(true))
+        .catch((error) => reject(error))
+    })
+  }
+
+  const getUserData = async (uid) => {
+    const docRef = doc(FBdb, "users", uid)
+    const docData = await getDoc(docRef)
+    setUserData(docData.data())
+  }
 
   const getDataCollection = async (path) => {
     const collectionData = await getDocs(collection(FBdb, path))
@@ -133,11 +165,11 @@ function App() {
         .catch((error) => reject(error))
     })
   }
-  
+
   const getDocument = async (col, id) => {
-    const docRef = doc (FBdb, col, id)
-    const docData = await getDoc (docRef)
-    if (docData.exists()){
+    const docRef = doc(FBdb, col, id)
+    const docData = await getDoc(docRef)
+    if (docData.exists()) {
       return docData.data()
     }
     else {
@@ -145,9 +177,54 @@ function App() {
     }
   }
 
+
+  const addKeyboardReview = async (keyboardId, reviewText, userId) => {
+    const path = "keyboards/" + keyboardId + "/reviews"
+    const reviewObj = { KeyboardId: keyboardId, UserId: userId, Text: reviewText, Date: new Date() }
+    const reviewRef = await addDoc(collection(FBdb, path), reviewObj)
+    if (reviewRef.id) {
+      return true
+    }
+    else {
+      return false
+    }
+  }
+
+
+  const getKeyboardReviews = async (keyboardId) => {
+    const collectionStr = "keyboards/" + keyboardId + "/reviews"
+    const reviewsQuery = query(collection(FBdb, collectionStr))
+    const unsubscribe = onSnapshot(reviewsQuery, (reviewsSnapshot) => {
+      let reviews = []
+      reviewsSnapshot.forEach((review) => {
+        let reviewData = review.data()
+        // create a js date object from firebase
+        let dateData = reviewData.Date.toDate()
+        // get the year month and date
+        let year = dateData.getFullYear()
+        let month = dateData.getMonth() + 1
+        let date = dateData.getDate()
+        let hours = dateData.getHours()
+        let minutes = dateData.getMinutes()
+        // construct as a string
+        let dateStr = `${date}/${month}/${year} ${hours}:${minutes}`
+
+        reviewData.Date = dateStr
+
+        reviews.push(reviewData)
+      })
+      //return reviews
+      setKeyboardReviews(reviews)
+    })
+  }
+
+
+
+
+
   return (
     <div className="App">
-      <Header title="Keyboard World" headernav={nav} />
+      <Header title="Keyboard World" headernav={nav} user={userData}/>
       <Routes>
         <Route path="/" element={<Home listData={data} imageGetter={getImageURL} />} />
         <Route path="/about" element={<About />} />
@@ -157,7 +234,19 @@ function App() {
         <Route path='/signup' element={<Signup handler={signup} />} />
         <Route path='/signout' element={<Signout handler={signOutUser} auth={auth} />} />
         <Route path='/signin' element={<Signin handler={signin} />} />
-        <Route path='/keyboards/:keyboardId' element = {<Detail getter = {getDocument}/>}/>
+        <Route
+          path='/keyboards/:keyboardId'
+          element={
+            <Detail
+              getter={getDocument}
+              auth = {auth}
+              imageGetter={getImageURL}
+              addReview={addKeyboardReview}
+              getReviews={getKeyboardReviews}
+              reviews={keyboardReviews}
+            />
+          }
+        />
       </Routes>
       <Footer year="2022" />
     </div>
