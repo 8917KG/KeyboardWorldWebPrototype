@@ -10,7 +10,6 @@ import { Signup } from './pages/Signup'
 import { Signout } from './pages/Signout'
 import { Signin } from './pages/Signin'
 import { Detail } from './pages/Detail'
-import { Shop } from './pages/Shop'
 import { Product } from './pages/Product'
 
 
@@ -57,7 +56,6 @@ const FBstorage = getStorage()
 
 const NavData = [
   { name: "Home", path: "/", public: true },
-  { name: "Shop", path: "/shop", public: true },
   { name: "Product", path: "/product", public: true },
   { name: "About", path: "/about", public: true },
   { name: "Contact", path: "/contact", public: true },
@@ -67,6 +65,7 @@ const NavData = [
 
 const NavDataAuth = [
   { name: "Home", path: "/", public: true },
+  { name: "Product", path: "/product", public: true },
   { name: "About", path: "/shop", public: true },
   { name: "Contact", path: "/contact", public: true },
   { name: "Sign Out", path: "/signout", public: true }
@@ -222,11 +221,10 @@ function App() {
     <div className="App">
       <Header title="Keyboard World" headernav={nav} user={userData}/>
       <Routes>
-        <Route path="/" element={<Home listData={data} imageGetter={getImageURL} />} />
+        <Route path="/product" element={<Product listData={data} imageGetter={getImageURL} />} />
         <Route path="/about" element={<About />} />
         <Route path="/contact" element={<Contact />} />
-        <Route path="/product" element={<Product />} />
-        <Route path="/shop" element={<Shop />} />
+        <Route path="/" element={<Home />} />
         <Route path='/signup' element={<Signup handler={signup} />} />
         <Route path='/signout' element={<Signout handler={signOutUser} auth={auth} />} />
         <Route path='/signin' element={<Signin handler={signin} />} />

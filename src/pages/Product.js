@@ -1,44 +1,64 @@
-
-import "react-responsive-carousel/lib/styles/carousel.min.css"; // requires a loader
-import { Carousel } from 'react-responsive-carousel';
-
+import { useState, useEffect } from "react"
+import { Link } from "react-router-dom"
+//import "/Users/kuldipgurung/Downloads/Advanced Web/8917_Keyboard World/keyboard-world/src/css/Homecss.css"
 export function Product(props) {
-  
-  return (
-    <div>
-      <Carousel autoPlay infiniteLoop renderThumbs={()=> null}>
-      <div>
-          <img className="img-fluid" src="./banner_img/banner1.jpg" />
-          <a href="https://dailyclack.com/products/zoom-tkl-essential-edition-keyboard-kit"
-          className="legend">Zoom TKL EE (Navy)</a>
-      </div>
-      <div>
-          <img className="img-fluid" src="./banner_img/banner2.jpg" />
-          <a href="https://dailyclack.com/products/zoom-tkl-essential-edition-keyboard-kit"
-           className="legend">Zoom TKL EE (Navy)</a>
-      </div>
-      <div>
-          <img className="img-fluid" src="./banner_img/banner3.jpg" />
-          <a href="https://dailyclack.com/products/zoom-tkl-essential-edition-keyboard-kit"
-           className="legend">Zoom TKL EE(Baby Blue)</a>
-      </div>
-      <div>
-          <img className="img-fluid" src="./banner_img/banner4.jpg" />
-          <a href="https://dailyclack.com/products/zoom-tkl-essential-edition-keyboard-kit"
-           className="legend">Zoom TKL EE (Pink)</a>
-      </div>
-      <div>
-          <img className="img-fluid" src="./banner_img/banner5.jpg" />
-          <a href="https://dailyclack.com/products/zoom-tkl-essential-edition-keyboard-kit"
-           className="legend">Zoom TKL EE (Pink)</a>
-      </div>
-      </Carousel>
-      <div className="container-fluid">
-        
+    const [pageData, setPageData] = useState([])
+    useEffect(() => {
+        setPageData(props.listData)
+    })
 
-      </div>
-    </div>
-    
-  )
+    if (pageData.length > 0) {
+        const itemCollection = pageData.map((item, key) => {
+            return (
+                <div className=" home-container-fluid col-md-4 p-2" key={key}>
+                    <div className="card">
+                        <Image urlgetter={props.imageGetter} imgPath={"keyboard_images/" + item.KeebPhoto} />
+                        <div className="card-body">
+                            <h5 className="card-title">{item.KeebName}</h5>
+                            <Link
+                                to={"/keyboards/" + item.id}>
+                                <button type="button" className="btn btn-info btn-sm">
+                                    Learn More Here
+                                </button>
+                            </Link>
+                        </div>
+                    </div>
+                </div>
+            )
+        })
+        return (
+            <div className="container my-4">
+                <div className="row">
+                    {itemCollection}
+                </div>
+            </div>
+        )
+    }
+    else {
+        return (
+            <div className="container"></div>
+        )
+    }
 }
 
+function Image(props) {
+    const [imageURL, setImageURL] = useState()
+
+    useEffect(() => {
+        if (!imageURL) {
+            props.urlgetter(props.imgPath)
+                .then((url) => setImageURL(url))
+                .catch((error) => console.log(error))
+        }
+    })
+    if (imageURL) {
+        return (
+            <img src={imageURL} className="card-img-top" alt={props.KeebName} />
+        )
+    }
+    else {
+        return (
+            <div>Loading...</div>
+        )
+    }
+}

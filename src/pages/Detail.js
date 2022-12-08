@@ -92,9 +92,9 @@ export function Detail(props) {
                                 <button className="btn btn-info my-2">Review this keyboard</button>
 
                                 <h5>For purchase:
-                                    <button className="btn btn-info my-4">
-                                        Buy here
-                                    </button>
+                                    <a className="btn btn-info my-4">
+                                        {keyboardData.URL}
+                                    </a>
                                 </h5>
                             </form>
                         </div>
