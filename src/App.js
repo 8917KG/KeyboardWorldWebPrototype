@@ -218,10 +218,6 @@ function App() {
     })
   }
 
-
-
-
-
   return (
     <div className="App">
       <Header title="Keyboard World" headernav={nav} user={userData}/>
