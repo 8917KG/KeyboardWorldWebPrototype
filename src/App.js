@@ -66,7 +66,7 @@ const NavData = [
 const NavDataAuth = [
   { name: "Home", path: "/", public: true },
   { name: "Product", path: "/product", public: true },
-  { name: "About", path: "/shop", public: true },
+  { name: "About", path: "/about", public: true },
   { name: "Contact", path: "/contact", public: true },
   { name: "Sign Out", path: "/signout", public: true }
 ]
